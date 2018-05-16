@@ -139,12 +139,12 @@ public class SVMClassifier implements IClassifier {
     @Override
     public void save(String file) throws IOException {
         FileUtils.deleteDirectory(new File(file));
-        model.save(SparkInitializer.getSparkContext(),"file://" + file);
+        model.save(SparkInitializer.getSparkContext(),file);
     }
 
     @Override
     public void load(String file) {
-        model = SVMModel.load(SparkInitializer.getSparkContext(),"file://"+file);
+        model = SVMModel.load(SparkInitializer.getSparkContext(),file);
     }
 
     @Override

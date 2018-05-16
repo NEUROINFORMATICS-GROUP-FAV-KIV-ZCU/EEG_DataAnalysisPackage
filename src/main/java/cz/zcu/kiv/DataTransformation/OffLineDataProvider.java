@@ -164,7 +164,7 @@ public class OffLineDataProvider {
             logger.info("Loaded .vdhr file:" + vhdrFile);
             logger.info("Loaded .vmrk file:" + vmrkFile);
 
-            DataTransformer dt = new EEGDataTransformer();
+            DataTransformer dt = new HDFSEEGDataTransformer(Const.HDFS_URI,Const.HDFS_CONF);
             List<ChannelInfo> channels = dt.getChannelInfo(vhdrFile);
 
             logger.debug("Extracting channels");
@@ -288,32 +288,34 @@ public class OffLineDataProvider {
         int num;
         String fileLoc;
         // read all lines
-        while ((line = br.readLine()) != null) {
-            // if the line is empty, ignore it
-            if (line.length() == 0){
-                continue;
-            }
-            // if the line starts with #, ignore it
-            if (line.charAt(0) == '#') { //comment line in info txt
-                continue;
-            }
-            // each line is expected to be <file location*.eeg > < guessed number> <Optional vals>
-            String[] parts = line.split(" ");
-            if (parts.length > 1) {
-                try {
-                    fileLoc  = parts[0];
-                    num = Integer.parseInt(parts[1]);
-                    // store in the map
-                    files.put(fileLoc, num);
-                    logger.info("Stored file " + fileLoc);
-                } catch (NumberFormatException ex) {
-                    throw new IllegalArgumentException("Line " + line + " contains an improper number format");
-                } finally {
-                    br.close();
+        try {
+            while ((line = br.readLine()) != null) {
+                // if the line is empty, ignore it
+                if (line.length() == 0) {
+                    continue;
+                }
+                // if the line starts with #, ignore it
+                if (line.charAt(0) == '#') { //comment line in info txt
+                    continue;
+                }
+                // each line is expected to be <file location*.eeg > < guessed number> <Optional vals>
+                String[] parts = line.split(" ");
+                if (parts.length > 1) {
+                    try {
+                        fileLoc = parts[0];
+                        num = Integer.parseInt(parts[1]);
+                        // store in the map
+                        files.put(fileLoc, num);
+                        logger.info("Stored file " + fileLoc);
+                    } catch (NumberFormatException ex) {
+                        throw new IllegalArgumentException("Line " + line + " contains an improper number format");
+                    }
                 }
             }
         }
-        br.close();
+        finally {
+            br.close();
+        }
     }
 
     /**

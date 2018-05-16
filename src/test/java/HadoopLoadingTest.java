@@ -1,13 +1,17 @@
+import cz.zcu.kiv.Utils.SparkInitializer;
 import cz.zcu.kiv.signal.DataTransformer;
 import cz.zcu.kiv.signal.EEGDataTransformer;
 import cz.zcu.kiv.Utils.Const;
+import cz.zcu.kiv.signal.HDFSEEGDataTransformer;
+import net.jcip.annotations.NotThreadSafe;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
-import org.junit.Test;
+import org.junit.*;
 
+import java.io.IOException;
 import java.net.URI;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
@@ -38,11 +42,21 @@ import java.util.ArrayList;
  **********************************************************************************************************************/
 public class HadoopLoadingTest {
 
+    @Before
+    public void initalizeHDFSTest() throws IOException {
+        EEGTest.initalizeHDFSTest();
+    }
+
+    @After
+    public void unintializeHDFSTest() throws IOException {
+        EEGTest.unintializeHDFSTest();
+    }
+
     @Test
     public void tryRAWEEG() {
         try {
             // instantiate the EEG data transformer
-            DataTransformer transformer = new EEGDataTransformer();
+            DataTransformer transformer = new HDFSEEGDataTransformer(Const.HDFS_URI,Const.HDFS_CONF);
 
             // variables which are important to track
             String hdfsvhdrFileLocation;
@@ -57,9 +71,9 @@ public class HadoopLoadingTest {
              - 3. location where you want the output file to be stored
              - 4. number of channels
             */
-            hdfsvhdrFileLocation = "/user/digitalAssistanceSystem/Datasets/University_Hospital_Pilsen/2_2_2017/male_2_11_1960_respiration_failure/ARO_2_2_instruction_nosound_01.vhdr";
-            hdfsEEGFileLocation = "/user/digitalAssistanceSystem/Datasets/University_Hospital_Pilsen/2_2_2017/male_2_11_1960_respiration_failure/ARO_2_2_instruction_nosound_01.eeg";
-            outputFileLocation = "/user/digitalAssistanceSystem/University_Hospital_Pilsen";
+            hdfsvhdrFileLocation = Const.REMOTE_TEST_DATA_DIRECTORY+"/DoD/DoD2015_01.vhdr";
+            hdfsEEGFileLocation = Const.REMOTE_TEST_DATA_DIRECTORY+"/DoD/DoD2015_01.eeg";
+            outputFileLocation = Const.REMOTE_TEST_DATA_DIRECTORY+"/Dod";
             channel = 3; // kinda the default value
             //List<ChannelInfo> channels = transformer.getChannelInfo(args[0]);
             //int channel = Integer.parseInt(args[args.length - 1]);
@@ -70,9 +84,7 @@ public class HadoopLoadingTest {
 
             // SPARK PART
 
-            SparkConf conf = new SparkConf().setMaster("local").setAppName("Work Count App");
-            // Create a Java version of the Spark Context from the configuration
-            JavaSparkContext sc = new JavaSparkContext(conf);
+            JavaSparkContext sc = SparkInitializer.getJavaSparkContext();
 
 
             // this is kinda ugly to do, but I don't think it's a big performance issue since

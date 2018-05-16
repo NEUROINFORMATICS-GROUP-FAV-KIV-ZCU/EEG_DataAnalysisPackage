@@ -38,6 +38,8 @@ public class Const {
     public static final String HDFS_URI = "hdfs://localhost:8020";
     public static final Configuration HDFS_CONF = new Configuration();
 
+    //Username of hadoop linux user with permission to write to HDFS
+    public static final String HADOOP_USER_NAME = "hdfs";
     ///--- this might be a good idea to explore
 //    public static final String HadoopUserPrefixFolder = "/user/digitalAssistanceSystem/";
  //   public static final String Data_folder = "/data/numbers/";
@@ -75,6 +77,12 @@ public class Const {
     public static final int ELECTROD_VALS = 20;
     
     //---------------------TEST---------------------
+    public static final String TEST_RESULTS_DIRECTORY = "test-results";
+    public static final String TEST_OUTPUT_DIRECTORY = "test-output";
+    public static final String LOCAL_TEST_DATA_DIRECTORY = "test-data";
+    public static final String REMOTE_TEST_DATA_DIRECTORY = "/data/test";
+    public static final String TRAINING_FILE = "/infoTrain.txt";
+    public static final String TESTING_FILE = "/info.txt";
    /* public static final String[] DIRECTORIES = {"data/numbers/Horazdovice", 
         "data/numbers/Blatnice","data/numbers/Strasice","data/numbers/Masarykovo", "data/numbers/Stankov", 
         "data/numbers/17ZS", "data/numbers/DolniBela", "data/numbers/KVary", "data/numbers/SPSD", "data/numbers/Strasice2",
@@ -84,5 +92,8 @@ public class Const {
 //         "data/numbers/DolniBela", "data/numbers/KVary", "data/numbers/SPSD", "data/numbers/Strasice2",
 //        "data/numbers/Tachov", "data/numbers/Tachov2", "data/numbers/ZSBolevecka"};
     public static final String[] DIRECTORIES = {"data/numbers"};
+
+    //-------------------ConfigKeys--------------------------
+    public static final String HADOOP_USER_NAME_KEY = "HADOOP_USER_NAME";
 
 }

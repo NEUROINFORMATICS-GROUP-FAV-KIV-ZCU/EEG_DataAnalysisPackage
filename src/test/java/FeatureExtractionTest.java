@@ -2,13 +2,18 @@ import cz.zcu.kiv.DataTransformation.OffLineDataProvider;
 import cz.zcu.kiv.FeatureExtraction.IFeatureExtraction;
 import cz.zcu.kiv.FeatureExtraction.WaveletTransform;
 import cz.zcu.kiv.Utils.SparkInitializer;
+import net.jcip.annotations.NotThreadSafe;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.Function;
-import org.junit.Test;
+import org.junit.*;
 
+import java.io.IOException;
 import java.util.List;
+
+import static cz.zcu.kiv.Utils.Const.REMOTE_TEST_DATA_DIRECTORY;
+import static cz.zcu.kiv.Utils.Const.TRAINING_FILE;
 
 /***********************************************************************************************************************
  *
@@ -38,6 +43,16 @@ public class FeatureExtractionTest {
 
     private static Log logger = LogFactory.getLog(FeatureExtractionTest.class);
 
+    @Before
+    public void initalizeHDFSTest() throws IOException {
+        EEGTest.initalizeHDFSTest();
+    }
+
+    @After
+    public void unintializeHDFSTest() throws IOException {
+        EEGTest.unintializeHDFSTest();
+    }
+
     /*
     we will do a wavelet transform with following specifications:
         - 512 ms interval starting 175 ms after the beginning of each epoch is used
@@ -55,7 +70,7 @@ public class FeatureExtractionTest {
     @Test
     public void test(){
         try{
-            String[] files = {"/user/digitalAssistanceSystem/data/numbers/infoTrain.txt"};
+            String[] files = {REMOTE_TEST_DATA_DIRECTORY+TRAINING_FILE};
             OffLineDataProvider odp =
                     new OffLineDataProvider(files);
             odp.loadData();
@@ -70,7 +85,7 @@ public class FeatureExtractionTest {
             logger.info("Dimensions of resulting epochs are: " + features.size() + " x " + features.get(0).length);
 
             //tests
-            assert features.size() == 527;
+            assert features.size() == 11;
             for (int i = 0; i < features.size(); i++){
                 assert features.get(i).length == 48;
             }
@@ -88,8 +103,7 @@ public class FeatureExtractionTest {
                 allFeatures += epochSum;
             }
             //System.out.println("Sum of all features" + allFeatures);
-            assert epochSum == 4.477696312014916;
-            assert allFeatures == -299.9964225116246;
+            assert allFeatures == -24.861844096031625;
 
         }
         catch (Exception e){

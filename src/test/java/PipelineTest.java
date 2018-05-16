@@ -1,5 +1,16 @@
 import cz.zcu.kiv.Pipeline.PipelineBuilder;
-import org.junit.Test;
+import cz.zcu.kiv.Utils.Const;
+import net.jcip.annotations.NotThreadSafe;
+import org.apache.commons.io.FileUtils;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
+import org.junit.*;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+
+import static cz.zcu.kiv.Utils.Const.*;
 
 /***********************************************************************************************************************
  *
@@ -25,55 +36,64 @@ import org.junit.Test;
  * PipelineTest, 2017/07/11 23:11 Dorian Beganovic
  *
  **********************************************************************************************************************/
-public class PipelineTest {
+public class PipelineTest{
+
+    @Before
+    public void initalizeHDFSTest() throws IOException {
+        EEGTest.initalizeHDFSTest();
+    }
+
+    @After
+    public void unintializeHDFSTest() throws IOException {
+        EEGTest.unintializeHDFSTest();
+    }
+
+
     @Test
-    public void test() throws Exception {
-        PipelineBuilder pipelineBuilder = new PipelineBuilder("" +
-                "info_file=/user/digitalAssistanceSystem/data/numbers/infoTrain.txt" +
+    public void logreg_test()  throws Exception  {
+
+        PipelineBuilder trainingPipelineBuilder = new PipelineBuilder("" +
+                "info_file="+REMOTE_TEST_DATA_DIRECTORY+TRAINING_FILE +
                 "&fe=dwt-8" +
-                "&train_clf=svm"+
+                "&train_clf=logreg" +
+                "&save_clf=true" +
+                "&save_name="+TEST_OUTPUT_DIRECTORY+"/log_reg_demo" +
+                "&result_path="+TEST_RESULTS_DIRECTORY+"/pipeline_logreg_test_result.txt"
+        );
+        trainingPipelineBuilder.execute();
+        PipelineBuilder testingPipelineBuilder = new PipelineBuilder("" +
+                "info_file="+REMOTE_TEST_DATA_DIRECTORY+TESTING_FILE+
+                "&fe=dwt-8" +
+                "&load_clf=logreg" +
+                "&load_name="+TEST_OUTPUT_DIRECTORY+"/log_reg_demo"
+        );
+        testingPipelineBuilder.execute();
+
+    }
+
+    @Test
+    public void svm_test() throws Exception {
+        PipelineBuilder trainingPipelineBuilder = new PipelineBuilder("" +
+                "info_file="+REMOTE_TEST_DATA_DIRECTORY+TRAINING_FILE +
+                "&fe=dwt-8" +
+                "&train_clf=svm" +
                 "&config_step_size=1.0"+
                 "&config_num_iterations=10"+
                 "&config_reg_param=0.01"+
                 "&config_mini_batch_fraction=1.0"+
-                "&result_path=/Users/dorianbeganovic/Desktop/10021.txt"
-        );
-        pipelineBuilder.execute();
-    }
-
-    @Test
-    public void test2() throws Exception {
-        PipelineBuilder pipelineBuilder = new PipelineBuilder("" +
-                "info_file=/user/digitalAssistanceSystem/data/numbers/infoTrain.txt" +
-                "&fe=dwt-8" +
-                "&train_clf=logreg" +
                 "&save_clf=true" +
-                "&save_name=log_reg_demo_Dorian"
+                "&save_name="+TEST_OUTPUT_DIRECTORY+"/svm_demo" +
+                "&result_path="+TEST_RESULTS_DIRECTORY+"/pipeline_svm_test_result.txt"
         );
-        pipelineBuilder.execute();
-    }
-
-    @Test
-    public void test2_svm() throws Exception {
-        PipelineBuilder pipelineBuilder = new PipelineBuilder("" +
-                "info_file=/user/digitalAssistanceSystem/data/numbers/infoTrain.txt" +
+        trainingPipelineBuilder.execute();
+        PipelineBuilder testingPipelineBuilder = new PipelineBuilder("" +
+                "info_file="+REMOTE_TEST_DATA_DIRECTORY+TESTING_FILE +
                 "&fe=dwt-8" +
-                "&train_clf=svm" +
-                "&save_clf=true" +
-                "&save_name=svm_demo_Dorian"
+                "&load_clf=svm" +
+                "&load_name="+TEST_OUTPUT_DIRECTORY+"/svm_demo"
         );
-        pipelineBuilder.execute();
+        testingPipelineBuilder.execute();
+
     }
 
-
-    @Test
-    public void test3() throws Exception {
-        PipelineBuilder pipelineBuilder = new PipelineBuilder("" +
-                "info_file=/user/digitalAssistanceSystem/data/numbers/infoTrain.txt" +
-                "&fe=dwt-8" +
-                "&load_clf=logreg" +
-                "&load_name=log_reg_demo_Dorian"
-        );
-        pipelineBuilder.execute();
-    }
 }

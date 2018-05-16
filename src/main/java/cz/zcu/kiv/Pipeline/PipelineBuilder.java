@@ -270,7 +270,7 @@ public class PipelineBuilder {
 
             // train
             classifier.setFeatureExtraction(fe);
-            classifier.load(System.getProperty("user.home") + "/spark_server/classifiers/" + classifierPath);
+            classifier.load(classifierPath);
 
             logger.info("Loaded the classifier");
 

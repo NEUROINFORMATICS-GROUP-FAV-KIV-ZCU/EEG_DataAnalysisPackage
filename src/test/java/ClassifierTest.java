@@ -6,13 +6,20 @@ import cz.zcu.kiv.DataTransformation.OffLineDataProvider;
 import cz.zcu.kiv.FeatureExtraction.IFeatureExtraction;
 import cz.zcu.kiv.FeatureExtraction.WaveletTransform;
 import cz.zcu.kiv.Utils.ClassificationStatistics;
+import net.jcip.annotations.NotThreadSafe;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+
+import static cz.zcu.kiv.Utils.Const.REMOTE_TEST_DATA_DIRECTORY;
+import static cz.zcu.kiv.Utils.Const.TRAINING_FILE;
 
 /***********************************************************************************************************************
  *
@@ -42,12 +49,22 @@ public class ClassifierTest {
 
     private static Log logger = LogFactory.getLog(ClassifierTest.class);
 
+    @BeforeClass
+    public static void initalizeHDFSTest() throws IOException {
+        EEGTest.initalizeHDFSTest();
+    }
+
+    @AfterClass
+    public static void unintializeHDFSTest() throws IOException {
+        EEGTest.unintializeHDFSTest();
+    }
+
     @Test
     public void test() {
         try {
 
             // @ input folder parameter
-            String[] files = {"/user/digitalAssistanceSystem/data/numbers/infoTrain.txt"};
+            String[] files = {REMOTE_TEST_DATA_DIRECTORY+TRAINING_FILE};
             OffLineDataProvider odp =
                     new OffLineDataProvider(files);
             odp.loadData();
@@ -95,7 +112,7 @@ public class ClassifierTest {
     @Test
     public void test2() {
         try {
-            String[] files = {"/user/digitalAssistanceSystem/data/numbers/infoTrain.txt"};
+            String[] files = {Const.REMOTE_TEST_DATA_DIRECTORY+TRAINING_FILE};
             OffLineDataProvider odp =
                     new OffLineDataProvider(files);
             odp.loadData();
@@ -141,7 +158,7 @@ public class ClassifierTest {
     @Test
     public void test3() {
         try {
-            String[] files = {"/user/digitalAssistanceSystem/data/numbers/infoTrain.txt"};
+            String[] files = {Const.REMOTE_TEST_DATA_DIRECTORY+TRAINING_FILE};
             OffLineDataProvider odp =
                     new OffLineDataProvider(files);
             odp.loadData();
@@ -186,7 +203,7 @@ public class ClassifierTest {
     @Test
     public void test4() {
         try {
-            String[] files = {"/user/digitalAssistanceSystem/data/numbers/infoTrain.txt"};
+            String[] files = {Const.REMOTE_TEST_DATA_DIRECTORY+TRAINING_FILE};
             OffLineDataProvider odp =
                     new OffLineDataProvider(files);
             odp.loadData();

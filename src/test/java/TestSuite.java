@@ -1,4 +1,4 @@
-/***********************************************************************************************************************
+/* **********************************************************************************************************************
  *
  * This file is part of the Spark_EEG_Analysis project
 
@@ -24,15 +24,16 @@
  **********************************************************************************************************************/
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-/*
+
 @RunWith(Suite.class)
 @Suite.SuiteClasses(value = {
         FeatureExtractionTest.class,
         HadoopLoadingTest.class,
         OfflineDataProviderTest.class,
-        ClassifierTest.class}
+        ClassifierTest.class,
+        PipelineTest.class}
 )
 public class TestSuite {
 
 }
-*/
+

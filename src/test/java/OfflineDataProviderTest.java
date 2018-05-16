@@ -1,11 +1,17 @@
 import cz.zcu.kiv.DataTransformation.DataProviderUtils;
 import cz.zcu.kiv.DataTransformation.OffLineDataProvider;
 
+import cz.zcu.kiv.Utils.Const;
+import net.jcip.annotations.NotThreadSafe;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.junit.Test;
+import org.junit.*;
 
+import java.io.IOException;
 import java.util.List;
+
+import static cz.zcu.kiv.Utils.Const.REMOTE_TEST_DATA_DIRECTORY;
+import static cz.zcu.kiv.Utils.Const.TRAINING_FILE;
 
 /***********************************************************************************************************************
  *
@@ -34,10 +40,20 @@ import java.util.List;
 public class OfflineDataProviderTest {
     private static Log logger = LogFactory.getLog(OffLineDataProvider.class);
 
+    @Before
+    public void initalizeHDFSTest() throws IOException {
+        EEGTest.initalizeHDFSTest();
+    }
+
+    @After
+    public void unintializeHDFSTest() throws IOException {
+        EEGTest.unintializeHDFSTest();
+    }
+
     @Test
     public void testLoadingInfoTxtFile(){
         try {
-            String[] files = {"/user/digitalAssistanceSystem/data/numbers/infoTrain.txt"};
+            String[] files = {REMOTE_TEST_DATA_DIRECTORY+TRAINING_FILE};
             OffLineDataProvider odp =
                     new OffLineDataProvider(files);
             odp.loadData();
@@ -46,7 +62,7 @@ public class OfflineDataProviderTest {
             logger.info("loaded " + epochs.size() + " epochs, each with size " + epochs.get(0).length + "x" + epochs.get(0)[0].length );
             logger.info("loaded " + targets.size() + " labels");
 
-            assert epochs.size() == 527;
+            assert epochs.size() == 11;
             assert epochs.get(0).length == 3;
             assert epochs.get(0)[0].length == 750;
             DataProviderUtils.writeEpochsToCSV(epochs);
@@ -62,14 +78,14 @@ public class OfflineDataProviderTest {
                 }
             }
             logger.info("Sum of epochs is" + epochsSum);
-            assert epochsSum == (-1.1528369024642944E7);
+            assert epochsSum == (-253772.18676757812);
 
             int targetsSum = 0;
             for (double target : targets){
                 targetsSum += target;
             }
             logger.info("Sum of targets is" + targetsSum);
-            assert targetsSum==263;
+            assert targetsSum == 5;
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -79,7 +95,7 @@ public class OfflineDataProviderTest {
     @Test
     public void testLoadingFile1(){
         try {
-            String[] files = {"data/numbers/Stankov/Stankov_26_1_20145_27.eeg","4"};
+            String[] files = {REMOTE_TEST_DATA_DIRECTORY+"/DoD/DoD_2015_02.eeg","4"};
             OffLineDataProvider odp =
                     new OffLineDataProvider(files);
             odp.loadData();
@@ -88,7 +104,7 @@ public class OfflineDataProviderTest {
 
             logger.info("loaded " + epochs.size() + " epochs, each with size " + epochs.get(0).length + "x" + epochs.get(0)[0].length );
             logger.info("loaded " + targets.size() + " labels");
-            assert epochs.size() == 44;
+            assert epochs.size() == 27;
             assert epochs.get(0).length == 3;
             assert epochs.get(0)[0].length == 750;
 
@@ -110,7 +126,7 @@ public class OfflineDataProviderTest {
                 targetsSum += target;
             }
             logger.info("Sum of targets is" + targetsSum);
-
+            assert targetsSum == 13;
 
         } catch (Exception e) {
             e.printStackTrace();
