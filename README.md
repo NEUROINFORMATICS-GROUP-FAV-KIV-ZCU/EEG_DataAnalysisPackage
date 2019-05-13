@@ -219,3 +219,24 @@ spark-submit
 --conf spark.driver.extraJavaOptions=-Dlogfile.name=/Users/dorianbeganovic/spark_server/logs/1721658280   
 /Users/dorianbeganovic/gsoc/Spark_EEG_Analysis/target/spark_eeg-1.2-jar-with-dependencies.jar   
 "info_file=/user/digitalAssistanceSystem/data/numbers/info.txt&fe=dwt-8&load_clf=logreg&load_name=logreg_0000&config_reg_param=0.01&config_mini_batch_fraction=1.0&config_num_iterations=100&config_step_size=1.0&result_path=/Users/dorianbeganovic/spark_server/results/1721658280.txt"  
+
+
+### Copyright
+
+ 
+  This file is part of the Workflow Designer project
+
+  ==========================================
+ 
+  Copyright (C) 2018 by University of West Bohemia (http://www.zcu.cz/en/)
+ 
+ ***********************************************************************************************************************
+ 
+  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
+  the License. You may obtain a copy of the License at
+ 
+      http://www.apache.org/licenses/LICENSE-2.0
+ 
+  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on
+  an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the
+  specific language governing permissions and limitations under the License.
